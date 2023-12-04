@@ -22,19 +22,21 @@ export class AppComponent implements AfterViewInit, OnInit {
   public language = new BehaviorSubject<string>('');
 
   ngOnInit(): void {
-    this.userAgent = new BehaviorSubject<string>(window.navigator.userAgent);
-    this.platform = new BehaviorSubject<string>(window.navigator.platform);
-    this.language = new BehaviorSubject<string>(window.navigator.language);
+    // this.userAgent = new BehaviorSubject<string>(window.navigator.userAgent);
+    // this.platform = new BehaviorSubject<string>(window.navigator.platform);
+    // this.language = new BehaviorSubject<string>(window.navigator.language);
   }
 
   @ViewChild('drawingCanvas', { static: true })
   canvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('drawingCanvas', { static: true }) canvasRef!: ElementRef;
+
   private context!: CanvasRenderingContext2D;
   private isDrawing: boolean = false;
   private drawingHistory: any[] = [];
   private currentHistoryIndex: number = -1;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private el: ElementRef, private renderer: Renderer2) {}
 
   ngAfterViewInit(): void {
     this.context = this.canvas.nativeElement.getContext('2d')!;
@@ -42,10 +44,33 @@ export class AppComponent implements AfterViewInit, OnInit {
       // Handle the error or return
       return;
     }
+    this.setCanvasSize();
     this.setupCanvas();
   }
 
+  setCanvasSize() {
+    const container = document.getElementById('container');
+    if (!container) return;
+
+    const canvas = this.canvasRef.nativeElement;
+    const containerWidth = container.offsetWidth;
+    const containerHeight = container.offsetHeight;
+
+    // Set canvas width and height
+    this.renderer.setAttribute(canvas, 'width', containerWidth.toString());
+    this.renderer.setAttribute(canvas, 'height', containerHeight.toString());
+  }
+
   private setupCanvas(): void {
+    // Get the container element
+    const container = this.el.nativeElement.parentElement;
+
+    // Set the canvas width and height to match the container
+    this.renderer.setStyle(container, 'position', 'relative');
+    this.renderer.setStyle(container, 'overflow', 'hidden');
+    this.renderer.setStyle(this.el.nativeElement, 'width', container.clientWidth + 'px');
+    this.renderer.setStyle(this.el.nativeElement, 'height', container.clientHeight + 'px');
+
     this.context.lineWidth = 5;
     this.context.lineCap = 'round';
     this.context.strokeStyle = '#000';

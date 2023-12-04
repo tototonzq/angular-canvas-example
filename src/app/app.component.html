@@ -1,14 +1,17 @@
-<div style="display: flex; gap: 20px;">
+<!-- <div style="display: flex; gap: 20px;">
   <p>user: {{ userAgent | async }}</p>
   <p>platform: {{ platform | async }}</p>
   <p>language: {{ language | async }}</p>
+</div> -->
+
+<div id="container" style="background-color: aqua; width: 100vw; height: 100vh; position: relative">
+  <canvas id="drawingCanvas" #drawingCanvas></canvas>
+
+  <div class="action-group-container" style="position: absolute; top: 4rem; left: 0.5rem">
+    <button (click)="saveDrawing()">Save Drawing</button>
+    <button (click)="clearCanvas()">Clear Canvas</button>
+    <button (click)="undo()">Undo</button>
+    <button (click)="redo()">Redo</button>
+  </div>
 </div>
 
-<div style="background-color: aqua; width: 100vw; height: 600px">
-  <canvas #drawingCanvas width="1200" height="600"></canvas>
-</div>
-
-<button (click)="saveDrawing()">Save Drawing</button>
-<button (click)="clearCanvas()">Clear Canvas</button>
-<button (click)="undo()">Undo</button>
-<button (click)="redo()">Redo</button>
